@@ -24,6 +24,7 @@ public class MainActivity extends FragmentActivity {
         transaction.replace(android.R.id.content, new FacebookLoginFragment());
         transaction.commit();
 
+
     }
 
 

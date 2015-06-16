@@ -1,96 +1,146 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/gray"
+    android:orientation="vertical">
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
         <com.facebook.login.widget.ProfilePictureView
             android:id="@+id/friend_picture_chat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_width="50dp"
+            android:layout_height="50dp" />
+
         <TextView
-            android:layout_gravity="center"
+            android:id="@+id/notification"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/notification"
-            android:textColor="@color/red"/>
+            android:layout_gravity="center"
+            android:textColor="@color/red" />
     </LinearLayout>
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
         <EditText
-            android:layout_gravity="center"
+            android:id="@+id/send_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/send_text"
-            android:textColor="@color/red"/>
+            android:layout_gravity="center"
+            android:textColor="@color/red" />
     </LinearLayout>
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/reply"
-            android:text="Reply"/>
-        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="Reply" />
+
+        <Button
             android:id="@+id/initiate"
-            android:text="Initiate Conversation"/>
-    </LinearLayout>
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="Initiate Conversation" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <view
+            android:id="@+id/groups_recycler_view"
+            class="android.support.v7.widget.RecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="122dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
             android:id="@+id/create_group"
-            android:text="Create Group"/>
-        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/group_name"/>
+            android:text="Create Group" />
+
+        <EditText
+            android:id="@+id/group_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/red" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/add_to_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add to group" />
+
+        <Button
+            android:id="@+id/delete_from_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Delete from group" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/delete_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Delete group" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/post_to_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Post to group" />
+
+        <EditText
+            android:id="@+id/message_to_post"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/red" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <Button
+            android:id="@+id/post_image_to_group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/add_to_group"
-            android:text="Add to group"/>
+            android:text="Post Image to group" />
         <Button
+            android:id="@+id/choose_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/delete_from_group"
-            android:text="Delete from group"/>
+            android:text="Choose_image" />
         </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/delete_group"
-            android:text="Delete group"/>
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/post_to_group"
-            android:text="Post to group"/>
-        </LinearLayout>
-
 </LinearLayout>

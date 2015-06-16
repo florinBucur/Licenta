@@ -2,7 +2,6 @@ package com.bucur.licenta;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -38,7 +37,7 @@ public class FacebookLoginFragment extends Fragment {
     private FacebookCallback<LoginResult> facebookCallback = new FacebookCallback<LoginResult>() {
         @Override
         public void onSuccess(LoginResult loginResult) {
-            Log.d("VIVZ", "onSuccess");
+
             AccessToken accessToken = loginResult.getAccessToken();
             setupTokenTracker();
             setupProfileTracker();
@@ -52,23 +51,25 @@ public class FacebookLoginFragment extends Fragment {
                 welcome.setText(constructWelcomeMessage(profile));
                 Log.d("ProfileId", profile.getId());
                 profilePictureView.setProfileId(userId);
-               // SystemClock.sleep(2000);
+
                 Intent intent = new Intent("com.bucur.licenta.intent.action.FriendsActivity");
                 intent.putExtra("Username", profile.getName());
                 startActivity(intent);
+
+
             }
         }
 
         @Override
         public void onCancel() {
-            Log.d("VIVZ", "onCancel");
+
             welcome.setVisibility(View.GONE);
             profilePictureView.setVisibility(View.GONE);
         }
 
         @Override
         public void onError(FacebookException e) {
-            Log.d("VIVZ", "onError " + e);
+            Log.d("Login", "onError " + e);
         }
     };
 
@@ -89,7 +90,7 @@ public class FacebookLoginFragment extends Fragment {
         mTokenTracker = new AccessTokenTracker() {
             @Override
             protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
-                Log.d("VIVZ", "" + currentAccessToken);
+                Log.d("Login", "" + currentAccessToken);
             }
         };
     }
@@ -98,12 +99,12 @@ public class FacebookLoginFragment extends Fragment {
         mProfileTracker = new ProfileTracker() {
             @Override
             protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
-                Log.d("VIVZ", "" + currentProfile);
+                Log.d("Login", "" + currentProfile);
                 if (currentProfile != null) {
                     userId = currentProfile.getId();
                     welcome.setText(constructWelcomeMessage(currentProfile));
                     profilePictureView.setProfileId(userId);
-                    SystemClock.sleep(2000);
+                    
                     Intent intent = new Intent("com.bucur.licenta.intent.action.FriendsActivity");
                     intent.putExtra("Username", currentProfile.getName());
                     startActivity(intent);
@@ -120,7 +121,7 @@ public class FacebookLoginFragment extends Fragment {
     private void setupLoginButton(View view) {
         LoginButton mButtonLogin = (LoginButton) view.findViewById(R.id.login_button);
         mButtonLogin.setFragment(this);
-        mButtonLogin.setReadPermissions("user_friends, publish_actions, user_groups, user_managed_groups");
+        mButtonLogin.setReadPermissions("user_friends, publish_actions, user_groups, user_managed_groups, user_photos");
         mButtonLogin.registerCallback(callbackManager, facebookCallback);
     }
 
@@ -148,7 +149,7 @@ public class FacebookLoginFragment extends Fragment {
     public void onResume() {
         super.onResume();
         Profile profile = Profile.getCurrentProfile();
-        welcome.setText(constructWelcomeMessage(profile));
+        welcome.setText(profile.getName());
     }
 
     @Override
@@ -162,5 +163,11 @@ public class FacebookLoginFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+
+
     }
 }

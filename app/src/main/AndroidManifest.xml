@@ -3,11 +3,11 @@
     package="com.bucur.licenta" >
 
     <uses-permission android:name="android.permission.INTERNET" />
-
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <application
 
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/pgp_image"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <meta-data
