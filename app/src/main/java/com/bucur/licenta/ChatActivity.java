@@ -3,12 +3,8 @@ package com.bucur.licenta;
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.v4.app.RemoteInput;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -32,15 +28,12 @@ import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
 import com.facebook.Profile;
 import com.facebook.login.widget.ProfilePictureView;
-import com.facebook.share.ShareApi;
-import com.facebook.share.model.SharePhoto;
-import com.facebook.share.model.SharePhotoContent;
 import com.facebook.share.widget.ShareDialog;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -110,9 +103,9 @@ public class ChatActivity extends Activity {
         postToGroup = (Button) findViewById(R.id.post_to_group);
         groupList = new ArrayList<FeedGroupItem>();
         groupName = (EditText) findViewById(R.id.group_name);
-        postToGroupEditText = (EditText)findViewById(R.id.message_to_post);
-        postImageToGroup = (Button)findViewById(R.id.post_image_to_group);
-        chooseImage = (Button)findViewById(R.id.choose_image);
+        postToGroupEditText = (EditText) findViewById(R.id.message_to_post);
+        postImageToGroup = (Button) findViewById(R.id.post_image_to_group);
+        chooseImage = (Button) findViewById(R.id.choose_image);
 
 
         final Intent intent = getIntent();
@@ -152,69 +145,79 @@ public class ChatActivity extends Activity {
     }
 
     @OnClick(R.id.post_image_to_group)
-    void postImageToGroup(){
+    void postImageToGroup() {
 
         final InputStream imageStream;
 
 
-            FeedGroupItem grp = getSelectedGroup();
-        GraphRequest request2 = GraphRequest.newPostRequest(AccessToken.getCurrentAccessToken(),
-                grp.getId() + "/albums",
-                null, new GraphRequest.Callback() {
+        FeedGroupItem grp = getSelectedGroup();
+//        GraphRequest request2 = GraphRequest.newPostRequest(AccessToken.getCurrentAccessToken(),
+//                grp.getId() + "/feed?fields=message",
+//                null, new GraphRequest.Callback() {
+//                    @Override
+//                    public void onCompleted(GraphResponse graphResponse) {
+//                        Toast.makeText(getApplicationContext(), graphResponse.toString(), Toast.LENGTH_LONG).show();
+//                        Log.d("Response to post", graphResponse.toString());
+//                    }
+//                });
+
+        GraphRequest request = new GraphRequest(AccessToken.getCurrentAccessToken(),
+                grp.getId() + "/feed",
+                null,
+                HttpMethod.GET,
+                new GraphRequest.Callback() {
                     @Override
                     public void onCompleted(GraphResponse graphResponse) {
-                        Toast.makeText(getApplicationContext(), graphResponse.toString(), Toast.LENGTH_LONG).show();
-                        Log.d("Response to post", graphResponse.toString());
+                        try {
+                            JSONArray jsonArray = graphResponse.getJSONObject().getJSONArray("data");
+                            JSONObject nextPage = graphResponse.getJSONObject().getJSONObject("paging");
+
+                            Log.d("Response to post", jsonArray.toString());
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
                     }
                 });
-//            GraphRequest request2 = new GraphRequest(AccessToken.getCurrentAccessToken(),
-//                    "/"+grp.getId()+"/photos",
-//                    null,
-//                    HttpMethod.POST,
-//                    new GraphRequest.Callback() {
-//                        @Override
-//                        public void onCompleted(GraphResponse graphResponse) {
-//                            Log.d("Cover Image", graphResponse.toString());
-//                        }
-//                    }
-//                    );
 
-            Bundle postParams = request2.getParameters();
+        Bundle postParams = request.getParameters();
+        postParams.putString("fields", "message,id");
+//            Cursor cursor = getContentResolver().query(imageUri, null, null, null, null);
+//            cursor.moveToFirst();
+//            int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+//            Log.d("real path", cursor.getString(idx));
+//            //Log.d("Uri",Uri.parse(imageUri.toString()).toString() );
+//            Bitmap bi = BitmapFactory.decodeFile(cursor.getString(idx));
+//            byte[] data = null;
+//            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//            bi.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+//            data = baos.toByteArray();
+//            postParams.putString("name", "Test");
+//            postParams.putString("description", "descriere");
+//            postParams.putString("caption", "my_picture");
+//            postParams.putString("message", "My message");
+//            postParams.putByteArray("picture", data);
+//
+        request.setParameters(postParams);
+        request.executeAsync();
 
-            Cursor cursor = getContentResolver().query(imageUri, null, null, null, null);
-            cursor.moveToFirst();
-            int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-            Log.d("real path", cursor.getString(idx));
-            //Log.d("Uri",Uri.parse(imageUri.toString()).toString() );
-            Bitmap bi = BitmapFactory.decodeFile(cursor.getString(idx));
-            byte[] data = null;
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bi.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-            data = baos.toByteArray();
-            postParams.putString("name", "Test");
-            postParams.putString("description", "descriere");
-            postParams.putString("caption", "my_picture");
-            postParams.putString("message", "My message");
-            postParams.putByteArray("picture", data);
-
-            request2.setParameters(postParams);
-            //request2.executeAsync();
-
-        SharePhoto sharePhoto = new SharePhoto.Builder().
-                setBitmap(bi).
-
-                setCaption("naspa").build();
-        Bundle bundle = sharePhoto.getParameters();
-        bundle.putString(grp.getId() + "/photos", "meh");
-        SharePhotoContent sharePhotoContent = new SharePhotoContent.Builder().addPhoto(sharePhoto).build();
-
-        ShareApi.share(sharePhotoContent, null);
+//
+//        SharePhoto sharePhoto = new SharePhoto.Builder().
+//                setBitmap(bi).
+//
+//                setCaption("naspa").build();
+//        Bundle bundle = sharePhoto.getParameters();
+//        bundle.putString(grp.getId() + "/photos", "meh");
+//        SharePhotoContent sharePhotoContent = new SharePhotoContent.Builder().addPhoto(sharePhoto).build();
+//
+//        ShareApi.share(sharePhotoContent, null);
 
 
     }
 
     @OnClick(R.id.choose_image)
-    void chooseImage(){
+    void chooseImage() {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
         startActivityForResult(intent, 101);
@@ -223,7 +226,14 @@ public class ChatActivity extends Activity {
     @OnClick(R.id.post_to_group)
     void postToGroup() {
         FeedGroupItem grp = getSelectedGroup();
-        postToGroupMetode(grp.getId(), postToGroupEditText.getText().toString());
+        String msg = postToGroupEditText.getText().toString();
+        try {
+            String encrypMsg = AES.encrypt(msg, AES.encryptionKey);
+            postToGroupMetode(grp.getId(), encrypMsg);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     @OnClick(R.id.delete_group)
@@ -281,7 +291,7 @@ public class ChatActivity extends Activity {
                         try {
                             JSONArray jsonArray = graphResponse.getJSONObject().getJSONArray("data");
                             for (int i = 0; i < jsonArray.length(); i++) {
-                                deleteFromGroupMetode(group,jsonArray.getJSONObject(i).get("id").toString());
+                                deleteFromGroupMetode(group, jsonArray.getJSONObject(i).get("id").toString());
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -337,7 +347,7 @@ public class ChatActivity extends Activity {
                             Log.d("Response to create", graphResponse.getJSONObject().getString("id"));
                             grp[0] = new FeedGroupItem(graphResponse.getJSONObject().getString("id"), groupName, false);
                             mAdapter.add(grp[0], mAdapter.getItemCount());
-                            addToGroupMetode(graphResponse.getJSONObject().getString("id"),Profile.getCurrentProfile().getId());
+                            addToGroupMetode(graphResponse.getJSONObject().getString("id"), Profile.getCurrentProfile().getId());
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -368,26 +378,6 @@ public class ChatActivity extends Activity {
         postParams.putString("member", memberId);
         request2.setParameters(postParams);
         request2.executeAsync();
-    }
-
-
-
-
-    public void onEvent(final NotificationWear notificationWear) {
-
-        notificationsStack.push(notificationWear);
-
-        final NotificationWear not = notificationWear;
-
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Log.d("onEvent", not.bundle.toString());
-                TextView textView = (TextView) findViewById(R.id.notification);
-                textView.setText("From: " + not.bundle.getString("android.title") + " Message: " +
-                        not.bundle.getString("android.text"));
-            }
-        });
     }
 
 
@@ -442,22 +432,62 @@ public class ChatActivity extends Activity {
         return grp;
     }
 
+    AES aes;
+
+    public void onEvent(final NotificationWear notificationWear) {
+        String namenot = notificationWear.bundle.getString("android.title");
+        System.out.println("Name " + namenot + " - " + name);
+
+        if (notificationWear.packageName.equals("com.facebook.orca") &&
+                namenot.equals(name)) {
+            notificationsStack.push(notificationWear);
+
+            final NotificationWear not = notificationWear;
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Log.d("onEvent", not.bundle.toString());
+
+                    String from = not.bundle.getString("android.title");
+                    String encryptMessage = not.bundle.getString("android.text");
+
+                    String message = "";
+
+                    try {
+                        aes = new AES();
+                        if (!encryptMessage.equals("Hello"))
+                            message = aes.decrypt(encryptMessage, aes.encryptionKey);
+                        else
+                            message = "Hello";
+                        Log.d("Criptat - Necriptat", message + " - " + encryptMessage);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+
+                    TextView textView = (TextView) findViewById(R.id.notification);
+                    textView.setText(from + ": " + message);
+
+
+                }
+            });
+        }
+    }
+
     NotificationWear aux;
 
     @OnClick(R.id.reply)
     void replyToLastNotification() {
 
-//        if(notificationsStack.isEmpty()){
-//            Toast.makeText(ChatActivity.this, "No notification!", Toast.LENGTH_LONG).show();
-//            return;
-//        }
         NotificationWear notificationWear = null;
 
-
         if (!notificationsStack.isEmpty()) {
+            Log.d("Notificatios", "Not Empty");
             notificationWear = notificationsStack.pop();
             aux = notificationWear;
         } else {
+            Log.d("Notificatios", "Empty");
             notificationWear = aux;
         }
 
@@ -466,10 +496,6 @@ public class ChatActivity extends Activity {
             return;
         }
 
-        if (!notificationWear.packageName.equals("com.facebook.orca") ||
-                !notificationWear.bundle.getString("android.title").equals(name)) {
-            return;
-        }
         RemoteInput[] remoteInputs = new RemoteInput[notificationWear.remoteInputs.size()];
 
         Intent localIntent = new Intent();
@@ -480,7 +506,22 @@ public class ChatActivity extends Activity {
             remoteInputs[i] = remoteIn;
             EditText send_text = (EditText) findViewById(R.id.send_text);
             if (!send_text.getText().toString().matches("")) {
-                localBundle.putCharSequence(remoteInputs[i].getResultKey(), send_text.getText().toString());
+
+                String msg = String.valueOf(send_text.getText());
+
+                String message = "";
+
+                try {
+
+                    message = AES.encrypt(msg, AES.encryptionKey);
+
+                    Log.d("Criptat - Necriptat", message + " - " + msg);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                localBundle.putCharSequence(remoteInputs[i].getResultKey(), message);
                 send_text.setText("");
                 i++;
             }
@@ -498,16 +539,15 @@ public class ChatActivity extends Activity {
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode){
+        switch (requestCode) {
             case 101:
-                if(resultCode == RESULT_OK){
+                if (resultCode == RESULT_OK) {
                     imageUri = data.getData();
                     Log.d("Image URI", imageUri.toString());
                 }
             default:
                 callbackManager.onActivityResult(requestCode, resultCode, data);
         }
-
 
 
     }

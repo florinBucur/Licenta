@@ -1,18 +1,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-
-
-    tools:context="com.bucur.licenta.FriendsActivity"
     android:orientation="vertical"
+    tools:context="com.bucur.licenta.GroupsActivity"
     android:background="#ff0f69a2">
 
     <view
         android:layout_width="match_parent"
-        android:layout_height="395dp"
+        android:layout_height="426dp"
         class="android.support.v7.widget.RecyclerView"
-        android:id="@+id/recycler_view"
+        android:id="@+id/feed_recycler_view"
         android:background="#ff0f69a2" />
 
- </LinearLayout>
+</LinearLayout>

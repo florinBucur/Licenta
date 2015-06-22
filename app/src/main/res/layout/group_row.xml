@@ -22,5 +22,13 @@
         android:layout_alignBottom="@+id/checkbox"
         android:layout_toRightOf="@+id/checkbox"
          />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/open_group"
+
+        android:text="Open"
+        android:layout_alignBottom="@+id/checkbox"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>

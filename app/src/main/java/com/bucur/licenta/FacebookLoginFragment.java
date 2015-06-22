@@ -104,7 +104,7 @@ public class FacebookLoginFragment extends Fragment {
                     userId = currentProfile.getId();
                     welcome.setText(constructWelcomeMessage(currentProfile));
                     profilePictureView.setProfileId(userId);
-                    
+
                     Intent intent = new Intent("com.bucur.licenta.intent.action.FriendsActivity");
                     intent.putExtra("Username", currentProfile.getName());
                     startActivity(intent);
@@ -148,8 +148,8 @@ public class FacebookLoginFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Profile profile = Profile.getCurrentProfile();
-        welcome.setText(profile.getName());
+        //Profile profile = Profile.getCurrentProfile();
+        //welcome.setText(profile.getName());
     }
 
     @Override

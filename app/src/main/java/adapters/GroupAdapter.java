@@ -1,6 +1,7 @@
 package adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,6 +52,17 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupsItems>{
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     groupsItems.checkBox.setChecked(isChecked);
                     feedItem.setSelected(isChecked);
+                }
+            });
+            groupsItems.openGroup.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent("com.bucur.licenta.intent.action.GroupsActivity");
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putExtra("Id", feedItem.getId());
+
+                    intent.putExtra("Name", feedItem.getName());
+                    context.startActivity(intent);
                 }
             });
 

@@ -6,4 +6,5 @@
     <string name="facebook_app_id">1558949984366781</string>
     <string name="title_activity_friends">Friends</string>
     <string name="title_activity_chat">Chat</string>
+    <string name="title_activity_groups">GroupsActivity</string>
 </resources>
