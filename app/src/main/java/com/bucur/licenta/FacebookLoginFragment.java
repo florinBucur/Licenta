@@ -47,6 +47,8 @@ public class FacebookLoginFragment extends Fragment {
             Profile profile = Profile.getCurrentProfile();
 
             if (profile != null) {
+
+                Log.d("Autentificare", loginResult.toString());
                 userId = profile.getId();
                 welcome.setText(constructWelcomeMessage(profile));
                 Log.d("ProfileId", profile.getId());
@@ -55,7 +57,6 @@ public class FacebookLoginFragment extends Fragment {
                 Intent intent = new Intent("com.bucur.licenta.intent.action.FriendsActivity");
                 intent.putExtra("Username", profile.getName());
                 startActivity(intent);
-
 
             }
         }

@@ -41,7 +41,17 @@ public class MessagesGroupAdapter extends RecyclerView.Adapter<MessagesGroupItem
 
         }
     }
+    public void add(FeedMessageGroupItem item, int position) {
+        feedItemsList.add(position, item);
+        notifyItemInserted(position);
 
+    }
+
+    public void remove(FeedMessageGroupItem item) {
+        int position = feedItemsList.indexOf(item);
+        feedItemsList.remove(position);
+        notifyItemRemoved(position);
+    }
     @Override
     public int getItemCount() {
         return (null != feedItemsList ? feedItemsList.size() : 0);

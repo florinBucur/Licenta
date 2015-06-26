@@ -20,14 +20,14 @@ import items.GroupsItems;
 /**
  * Created by bucur on 6/12/2015.
  */
-public class GroupAdapter extends RecyclerView.Adapter<GroupsItems>{
+public class GroupAdapter extends RecyclerView.Adapter<GroupsItems> {
 
     public List<FeedGroupItem> feedItemsList;
     private Context context;
     private CheckBox checkBox;
     private TextView name;
 
-    public GroupAdapter(Context context, List<FeedGroupItem> list){
+    public GroupAdapter(Context context, List<FeedGroupItem> list) {
         this.feedItemsList = list;
         this.context = context;
     }
@@ -38,7 +38,6 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupsItems>{
         GroupsItems groupsItems = new GroupsItems(v);
         return groupsItems;
     }
-
 
 
     @Override

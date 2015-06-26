@@ -32,17 +32,17 @@ import com.facebook.share.widget.ShareDialog;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
+import adapters.ChatAdapter;
 import adapters.GroupAdapter;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.greenrobot.event.EventBus;
+import items.FeedChatItem;
 import items.FeedGroupItem;
 import notifications.NotificationWear;
 
@@ -73,11 +73,14 @@ public class ChatActivity extends Activity {
 
     String fbid;
     ArrayList<FeedGroupItem> groupList;
+    ArrayList<FeedChatItem> chatList;
     AccessToken appAccessToken;
     String appToken = "1558949984366781|UmJ1BCrCYS5A8Kw-SedEm8aOAis";
     String appId = "1558949984366781";
     RecyclerView recyclerView;
     GroupAdapter mAdapter;
+    ChatAdapter chatAdapter;
+    RecyclerView chatRecyclerView;
     Uri imageUri;
 
     @Override
@@ -92,7 +95,7 @@ public class ChatActivity extends Activity {
 
         callbackManager = CallbackManager.Factory.create();
         profilePictureView = (ProfilePictureView) findViewById(R.id.friend_picture_chat);
-        receiveText = (TextView) findViewById(R.id.notification);
+        //receiveText = (TextView) findViewById(R.id.notification);
         sendText = (EditText) findViewById(R.id.send_text);
         reply = (Button) findViewById(R.id.reply);
         initiate = (Button) findViewById(R.id.initiate);
@@ -100,12 +103,12 @@ public class ChatActivity extends Activity {
         createGroup = (Button) findViewById(R.id.create_group);
         deleteFromGroup = (Button) findViewById(R.id.delete_from_group);
         deleteGroup = (Button) findViewById(R.id.delete_group);
-        postToGroup = (Button) findViewById(R.id.post_to_group);
+        //postToGroup = (Button) findViewById(R.id.post_to_group);
         groupList = new ArrayList<FeedGroupItem>();
         groupName = (EditText) findViewById(R.id.group_name);
-        postToGroupEditText = (EditText) findViewById(R.id.message_to_post);
-        postImageToGroup = (Button) findViewById(R.id.post_image_to_group);
-        chooseImage = (Button) findViewById(R.id.choose_image);
+        //postToGroupEditText = (EditText) findViewById(R.id.message_to_post);
+        //postImageToGroup = (Button) findViewById(R.id.post_image_to_group);
+        //chooseImage = (Button) findViewById(R.id.choose_image);
 
 
         final Intent intent = getIntent();
@@ -113,6 +116,17 @@ public class ChatActivity extends Activity {
         if (intent != null) {
             recyclerView = (RecyclerView) findViewById(R.id.groups_recycler_view);
             recyclerView.setLayoutManager(new LinearLayoutManager(ChatActivity.this));
+
+            chatRecyclerView = (RecyclerView) findViewById(R.id.chat_recycler_view);
+            chatRecyclerView.setLayoutManager(new LinearLayoutManager(ChatActivity.this));
+            chatList = new ArrayList<FeedChatItem>();
+
+            chatAdapter = new ChatAdapter(getApplicationContext(), chatList);
+
+            chatRecyclerView.setAdapter(chatAdapter);
+
+            chatRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
             fbid = intent.getStringExtra("Id");
             profilePictureView.setProfileId(fbid);
             ButterKnife.inject(this);
@@ -144,13 +158,13 @@ public class ChatActivity extends Activity {
 
     }
 
-    @OnClick(R.id.post_image_to_group)
-    void postImageToGroup() {
-
-        final InputStream imageStream;
-
-
-        FeedGroupItem grp = getSelectedGroup();
+//    @OnClick(R.id.post_image_to_group)
+//    void postImageToGroup() {
+//
+//        final InputStream imageStream;
+//
+//
+//        FeedGroupItem grp = getSelectedGroup();
 //        GraphRequest request2 = GraphRequest.newPostRequest(AccessToken.getCurrentAccessToken(),
 //                grp.getId() + "/feed?fields=message",
 //                null, new GraphRequest.Callback() {
@@ -160,29 +174,29 @@ public class ChatActivity extends Activity {
 //                        Log.d("Response to post", graphResponse.toString());
 //                    }
 //                });
-
-        GraphRequest request = new GraphRequest(AccessToken.getCurrentAccessToken(),
-                grp.getId() + "/feed",
-                null,
-                HttpMethod.GET,
-                new GraphRequest.Callback() {
-                    @Override
-                    public void onCompleted(GraphResponse graphResponse) {
-                        try {
-                            JSONArray jsonArray = graphResponse.getJSONObject().getJSONArray("data");
-                            JSONObject nextPage = graphResponse.getJSONObject().getJSONObject("paging");
-
-                            Log.d("Response to post", jsonArray.toString());
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-                });
-
-        Bundle postParams = request.getParameters();
-        postParams.putString("fields", "message,id");
+//
+//        GraphRequest request = new GraphRequest(AccessToken.getCurrentAccessToken(),
+//                grp.getId() + "/feed",
+//                null,
+//                HttpMethod.GET,
+//                new GraphRequest.Callback() {
+//                    @Override
+//                    public void onCompleted(GraphResponse graphResponse) {
+//                        try {
+//                            JSONArray jsonArray = graphResponse.getJSONObject().getJSONArray("data");
+//                            JSONObject nextPage = graphResponse.getJSONObject().getJSONObject("paging");
+//
+//                            Log.d("Response to post", jsonArray.toString());
+//
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
+//
+//                    }
+//                });
+//
+//        Bundle postParams = request.getParameters();
+//        postParams.putString("fields", "message,id");
 //            Cursor cursor = getContentResolver().query(imageUri, null, null, null, null);
 //            cursor.moveToFirst();
 //            int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
@@ -199,9 +213,9 @@ public class ChatActivity extends Activity {
 //            postParams.putString("message", "My message");
 //            postParams.putByteArray("picture", data);
 //
-        request.setParameters(postParams);
-        request.executeAsync();
-
+//        request.setParameters(postParams);
+//        request.executeAsync();
+//
 //
 //        SharePhoto sharePhoto = new SharePhoto.Builder().
 //                setBitmap(bi).
@@ -212,29 +226,17 @@ public class ChatActivity extends Activity {
 //        SharePhotoContent sharePhotoContent = new SharePhotoContent.Builder().addPhoto(sharePhoto).build();
 //
 //        ShareApi.share(sharePhotoContent, null);
+//
+//
+//    }
+//
+//    @OnClick(R.id.choose_image)
+//    void chooseImage() {
+//        Intent intent = new Intent(Intent.ACTION_PICK);
+//        intent.setType("image/*");
+//        startActivityForResult(intent, 101);
+//    }
 
-
-    }
-
-    @OnClick(R.id.choose_image)
-    void chooseImage() {
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");
-        startActivityForResult(intent, 101);
-    }
-
-    @OnClick(R.id.post_to_group)
-    void postToGroup() {
-        FeedGroupItem grp = getSelectedGroup();
-        String msg = postToGroupEditText.getText().toString();
-        try {
-            String encrypMsg = AES.encrypt(msg, AES.encryptionKey);
-            postToGroupMetode(grp.getId(), encrypMsg);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
 
     @OnClick(R.id.delete_group)
     void deleteGroup() {
@@ -465,9 +467,11 @@ public class ChatActivity extends Activity {
                         e.printStackTrace();
                     }
 
-
-                    TextView textView = (TextView) findViewById(R.id.notification);
-                    textView.setText(from + ": " + message);
+                    FeedChatItem feedChatItem = new FeedChatItem(from + ": ", message);
+                    chatAdapter.add(feedChatItem, chatAdapter.getItemCount());
+                    chatRecyclerView.scrollToPosition(chatAdapter.getItemCount() - 1);
+                    //TextView textView = (TextView) findViewById(R.id.notification);
+                    //textView.setText(from + ": " + message);
 
 
                 }
@@ -520,7 +524,9 @@ public class ChatActivity extends Activity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
+                FeedChatItem feedChatItem = new FeedChatItem("Me: ", msg);
+                chatAdapter.add(feedChatItem, chatAdapter.getItemCount());
+                chatRecyclerView.scrollToPosition(chatAdapter.getItemCount() - 1);
                 localBundle.putCharSequence(remoteInputs[i].getResultKey(), message);
                 send_text.setText("");
                 i++;

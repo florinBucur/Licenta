@@ -18,17 +18,26 @@
         android:id="@+id/group_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="@dimen/textsize"
+        android:textColor="@color/black"
         android:layout_alignBaseline="@+id/checkbox"
         android:layout_alignBottom="@+id/checkbox"
         android:layout_toRightOf="@+id/checkbox"
          />
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="70dp"
+        android:layout_height="30dp"
+        android:textColor="#FFFFFF"
+        android:textSize="@dimen/messagesize"
         android:id="@+id/open_group"
-
         android:text="Open"
+        android:background="@drawable/buttons_shape"
+        android:shadowColor="#A8A8A8"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="5"
         android:layout_alignBottom="@+id/checkbox"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:elegantTextHeight="true" />
 
 </RelativeLayout>

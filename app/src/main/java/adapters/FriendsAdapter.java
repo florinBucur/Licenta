@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bucur.licenta.R;
 import com.facebook.login.widget.ProfilePictureView;
@@ -20,14 +19,14 @@ import items.FriendsItems;
 /**
  * Created by bucur on 6/2/2015.
  */
-public class FriendsAdapter extends RecyclerView.Adapter<FriendsItems>{
+public class FriendsAdapter extends RecyclerView.Adapter<FriendsItems> {
 
     private List<FeedFriendItem> feedItemsList;
     private Context context;
     private ProfilePictureView profilePictureView;
     private TextView name;
 
-    public FriendsAdapter(Context context, List<FeedFriendItem> list){
+    public FriendsAdapter(Context context, List<FeedFriendItem> list) {
         this.feedItemsList = list;
         this.context = context;
     }
@@ -48,8 +47,6 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsItems>{
             friendsItems.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(context, "Recycle Click" + feedItem.getFbid() + " " + feedItem.getName(), Toast.LENGTH_SHORT).show();
-
                     Intent intent = new Intent("com.bucur.licenta.intent.action.ChatActivity");
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.putExtra("Id", feedItem.getFbid());
@@ -60,6 +57,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsItems>{
             });
         }
     }
+
     @Override
     public int getItemCount() {
         return (null != feedItemsList ? feedItemsList.size() : 0);

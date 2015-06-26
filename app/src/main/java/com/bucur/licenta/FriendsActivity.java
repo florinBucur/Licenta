@@ -9,11 +9,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
+import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphRequestBatch;
 import com.facebook.GraphResponse;
+import com.facebook.Profile;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -44,7 +46,9 @@ public class FriendsActivity extends Activity {
 
         Intent intent = getIntent();
         if (intent != null) {
-
+            Toast.makeText(getApplicationContext(),
+                    "Autentificare reusita: " + AccessToken.getCurrentAccessToken() + " " + Profile.getCurrentProfile().getName(),
+                    Toast.LENGTH_LONG).show();
             GraphRequestBatch request = new GraphRequestBatch(
                     GraphRequest.newMyFriendsRequest(
                             AccessToken.getCurrentAccessToken(),
