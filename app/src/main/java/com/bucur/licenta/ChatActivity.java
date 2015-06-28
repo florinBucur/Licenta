@@ -458,9 +458,13 @@ public class ChatActivity extends Activity {
 
                     try {
                         aes = new AES();
-                        if (!encryptMessage.equals("Hello"))
+                        if (!encryptMessage.equals("Hello")) {
+                            long startTime = System.nanoTime();
                             message = aes.decrypt(encryptMessage, aes.encryptionKey);
-                        else
+                            long endTime = System.nanoTime()  ;
+                            long estimatedTime = (endTime - startTime);
+                            Log.d("Timp la decriptare:", String.valueOf(estimatedTime ) +" " + encryptMessage + " " + message);
+                        }else
                             message = "Hello";
                         Log.d("Criptat - Necriptat", message + " - " + encryptMessage);
                     } catch (Exception e) {
@@ -516,8 +520,12 @@ public class ChatActivity extends Activity {
                 String message = "";
 
                 try {
-
+                    long startTime = System.nanoTime();
                     message = AES.encrypt(msg, AES.encryptionKey);
+                    long endTime = System.nanoTime();
+                    long estimatedTime = (endTime - startTime);
+
+                    Log.d("Timp la criptare:", String.valueOf(estimatedTime) + " " + msg + " "+message);
 
                     Log.d("Criptat - Necriptat", message + " - " + msg);
 
